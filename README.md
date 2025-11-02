@@ -57,8 +57,8 @@ This project provides a REST API for analyzing dance movements in videos. It use
 
 1. **Clone the repository**
 ```bash
-git clone <your-repo-url>
-cd dance-movement-analysis
+git clone https://github.com/Harihara04sudhan/ai-dance-movement-server.git
+cd ai-dance-movement-server
 ```
 
 2. **Create virtual environment**
@@ -95,6 +95,18 @@ Or use the provided script:
 ```bash
 chmod +x build_and_run.sh
 ./build_and_run.sh
+```
+
+### Using Demo Client
+
+A demo client is provided for easy testing:
+
+```bash
+# Create a test video (optional)
+python create_test_video.py
+
+# Run the demo client
+python demo_client.py test_dance.mp4 output_result.mp4
 ```
 
 ## 📡 API Documentation
@@ -348,18 +360,30 @@ This project demonstrates key competencies that align with Callus's focus on inn
 ## 📁 Project Structure
 
 ```
-dance-movement-analysis/
+ai-dance-movement-server/
 ├── api_server.py              # FastAPI REST API server
 ├── movement_analyzer.py       # MediaPipe pose detection logic
 ├── test_movement_analyzer.py  # Comprehensive unit tests
+├── demo_client.py             # Demo client for testing
+├── create_test_video.py       # Test video generator
 ├── requirements.txt           # Python dependencies
 ├── Dockerfile                 # Docker configuration
+├── docker-compose.yml         # Docker Compose configuration
 ├── .gitignore                 # Git ignore patterns
 ├── .env.example               # Environment variables template
 ├── build_and_run.sh          # Local Docker build script
 ├── deploy_aws.sh             # AWS deployment script
 ├── deploy_gcp.sh             # GCP deployment script
-└── README.md                 # This file
+├── README.md                 # Project documentation
+├── GETTING_STARTED.md        # Quick start guide
+├── VIDEO_GUIDE.md            # Video recording instructions
+├── SUBMISSION_CHECKLIST.md   # Submission checklist
+├── TEST_RESULTS.md           # Testing documentation
+├── FINAL_SUBMISSION_GUIDE.md # Complete submission guide
+├── DEMO_VIDEO_SCRIPT.md      # Video demo script
+├── test_dance.mp4            # Sample test video
+├── uploads/                  # Uploaded videos directory
+└── outputs/                  # Processed videos directory
 ```
 
 ## 🔒 Security Considerations
@@ -385,13 +409,40 @@ dance-movement-analysis/
 
 ## 📝 License
 
-[Your License Here]
+MIT License
+
+Copyright (c) 2025 Harihara Sudhan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 ## 👤 Author
 
-[Your Name]
-- GitHub: [@yourusername]
-- Email: your.email@example.com
+**Harihara Sudhan**
+- GitHub: [@Harihara04sudhan](https://github.com/Harihara04sudhan)
+- Repository: [ai-dance-movement-server](https://github.com/Harihara04sudhan/ai-dance-movement-server)
+- LinkedIn: [Connect with me](https://linkedin.com/in/harihara-sudhan)
+
+**Project Details:**
+- Created for: Callus Company Inc. Assessment
+- Position: AI/ML Server Engineer
+- Submission Date: November 2025
+- Technologies: Python, MediaPipe, FastAPI, Docker, Computer Vision
 
 ## 🙏 Acknowledgments
 
