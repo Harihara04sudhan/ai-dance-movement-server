@@ -1,5 +1,7 @@
 # 🕺 Dance Movement Analysis API
 
+[![CI](https://github.com/Harihara04sudhan/ai-dance-movement-server/actions/workflows/ci.yml/badge.svg)](https://github.com/Harihara04sudhan/ai-dance-movement-server/actions/workflows/ci.yml)
+
 An AI-powered cloud-based server that analyzes body movements from dance videos using MediaPipe Pose Detection. Built with Python, FastAPI, Docker, and deployed to the cloud.
 
 ## 📋 Overview
@@ -106,6 +108,7 @@ A demo client is provided for easy testing:
 python create_test_video.py
 
 # Run the demo client
+python create_test_video.py            # generates test_dance.mp4 locally
 python demo_client.py test_dance.mp4 output_result.mp4
 ```
 
@@ -381,7 +384,6 @@ ai-dance-movement-server/
 ├── TEST_RESULTS.md           # Testing documentation
 ├── FINAL_SUBMISSION_GUIDE.md # Complete submission guide
 ├── DEMO_VIDEO_SCRIPT.md      # Video demo script
-├── test_dance.mp4            # Sample test video
 ├── uploads/                  # Uploaded videos directory
 └── outputs/                  # Processed videos directory
 ```

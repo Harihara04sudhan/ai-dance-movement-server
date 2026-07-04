@@ -7,7 +7,9 @@ from fastapi import FastAPI, File, UploadFile, HTTPException, BackgroundTasks
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+import hmac
 import os
+import time
 import uuid
 import shutil
 from pathlib import Path
@@ -36,6 +38,59 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# --- Security: API key auth, rate limiting, upload size guard ---------------
+# Set API_KEY in the environment to require an X-API-Key header on /api/* routes.
+# Health endpoints stay unauthenticated for load balancers.
+API_KEY = os.getenv("API_KEY", "")
+MAX_UPLOAD_BYTES = int(os.getenv("MAX_UPLOAD_MB", "100")) * 1024 * 1024
+RATE_LIMIT_REQUESTS = int(os.getenv("RATE_LIMIT_REQUESTS", "30"))
+RATE_LIMIT_WINDOW = int(os.getenv("RATE_LIMIT_WINDOW_SECONDS", "60"))
+
+_request_log: Dict[str, list] = {}
+
+OPEN_PATHS = {"/", "/health", "/docs", "/openapi.json"}
+
+
+@app.middleware("http")
+async def security_middleware(request, call_next):
+    path = request.url.path
+
+    if path in OPEN_PATHS:
+        return await call_next(request)
+
+    # API key auth (only enforced when API_KEY is configured)
+    if API_KEY:
+        provided = request.headers.get("x-api-key", "")
+        if not hmac.compare_digest(provided, API_KEY):
+            return JSONResponse(
+                status_code=401,
+                content={"detail": "Invalid or missing X-API-Key header"},
+            )
+
+    # In-memory sliding-window rate limit per client IP
+    client_ip = request.client.host if request.client else "unknown"
+    now = time.time()
+    window = _request_log.setdefault(client_ip, [])
+    window[:] = [t for t in window if now - t < RATE_LIMIT_WINDOW]
+    if len(window) >= RATE_LIMIT_REQUESTS:
+        return JSONResponse(
+            status_code=429,
+            content={"detail": "Rate limit exceeded. Try again later."},
+        )
+    window.append(now)
+
+    # Reject oversized uploads before reading the body
+    if path == "/api/analyze":
+        content_length = request.headers.get("content-length")
+        if content_length and int(content_length) > MAX_UPLOAD_BYTES:
+            return JSONResponse(
+                status_code=413,
+                content={"detail": f"Upload too large (max {MAX_UPLOAD_BYTES // (1024 * 1024)} MB)"},
+            )
+
+    return await call_next(request)
+
 
 # Setup directories
 UPLOAD_DIR = Path("uploads")
@@ -67,6 +122,11 @@ def cleanup_old_files():
 async def startup_event():
     """Run on application startup"""
     logger.info("Dance Movement Analysis API started")
+    if not API_KEY:
+        logger.warning(
+            "API_KEY is not set — /api/* endpoints are UNAUTHENTICATED. "
+            "Set the API_KEY environment variable before deploying publicly."
+        )
     cleanup_old_files()
 
 
